@@ -1,47 +1,27 @@
 
 import './App.css';
-import {useState} from "react";
-
+import {useEffect, useState} from "react";
+import Axios from 'axios';
 
 function App() {
-  
-const [age,setAge]=useState(0);
+  const [generatedExcuse, setGeneratedExcuse] = useState("");
 
-const increaseAge=()=>{
-  setAge(age+1);
-}
-const decreaseAge=()=>{
-  age>0 && setAge(age-1);
-}
-const setZero=()=>{
- setAge(0);
-}
-const [inputValue,setinputValue]=useState("");
-const changer=(event)=>{
-  setinputValue(event.target.value);
+  const changeMode= (excuse) => {
+    Axios.get(`https://excuser-three.vercel.app/v1/excuse/${excuse}/`).then(
+      (res) => {
+        setGeneratedExcuse(res.data[0].excuse);
+      }
+    );
+  };
 
-}
-const[val,setVal]=useState(1);
-const alter=()=>{
-   if(val===1)
-   {
-       setVal(0);
-   }
-   else{
-   setVal(1);
-   }
-}
+
   return (
     <div className="App">
-      {age}
-      <button onClick={increaseAge}>increase Age</button>
-      <button onClick={decreaseAge}>decrease Age</button>
-      <button onClick={setZero}>setZero</button>
-      <input type="text" onChange={changer}/>
-      {inputValue}
-      <button onClick={alter}>show/hide</button>
-      {val===1  && <h1>My name is Shubham</h1>}
-    
+      <h1>Generate an excuse</h1>
+     <button onClick={()=>changeMode('party')}>Party</button>
+     <button onClick={()=>changeMode('family')}>Family</button>
+     <button onClick={()=>changeMode('office')}>Office</button>
+     <p>{generatedExcuse}</p>
     </div>
   );
 }
